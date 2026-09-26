@@ -1,69 +1,76 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowDown, ChevronDown } from "lucide-react";
+import WorkoutCard from "@/app/components/WorkoutCard";
+import type { SortKey, Workout } from "@/app/types/workout";
+import { API_URL } from "@/app/lib/api";
+
+export default function HomePage() {
+  const [workouts, setWorkouts] = useState<Workout[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [sort, setSort] = useState<SortKey>("duration");
+
+  useEffect(() => {
+    let active = true;
+    fetch(API_URL)
+      .then((response) => {
+        if (!response.ok) throw new Error("fetch failed");
+        return response.json();
+      })
+      .then((data: Workout[]) => { if (active) setWorkouts(data); })
+      .catch(() => { if (active) setError(true); })
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, []);
+
+  const sorted = useMemo(() => [...workouts].sort((a, b) => b[sort === "calories" ? "caloriesBurned" : sort] - a[sort === "calories" ? "caloriesBurned" : sort]), [workouts, sort]);
+
+  const heroImage = workouts[0]?.image;
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="mx-auto max-w-[1180px]">
+      <section className="grid min-h-[420px] overflow-hidden rounded-2xl border border-[#292e37] bg-[#15181e] lg:grid-cols-[1.2fr_.8fr]">
+        <div className="flex flex-col justify-center px-7 py-10 sm:px-12 lg:px-14">
+          <p className="mb-5 text-xs font-black tracking-widest text-[#c8ff00]">WORKOUT LIBRARY</p>
+          <h1 className="max-w-[650px] font-display text-5xl leading-[.95] text-white sm:text-6xl">TRAIN WITH INTENT. LOG EVERY SET.</h1>
+          <p className="mt-5 max-w-xl text-sm leading-6 text-zinc-400">FitLog is a dark, no-nonsense gym companion: pick a lift, lock it into today's plan, and watch the week's work add up.</p>
+          <Link href="#library" className="mt-7 inline-flex w-fit items-center gap-2 rounded-md bg-[#c8ff00] px-5 py-3 text-xs font-black text-black hover:bg-[#d7ff4b]">BROWSE WORKOUTS <ArrowDown className="h-4 w-4" /></Link>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <div className="relative min-h-[300px] bg-[radial-gradient(circle_at_center,#30343b,transparent_62%)]">
+          {heroImage && <Image src={heroImage} alt="Workout illustration" fill sizes="(max-width: 1024px) 100vw, 40vw" className="object-contain p-8 sm:p-14" priority />}
         </div>
-      </main>
+      </section>
+
+      <section id="library" className="scroll-mt-24 pt-14">
+        <div className="mb-7 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+          <div>
+            <h2 className="font-display text-4xl uppercase text-white">THE LIBRARY</h2>
+            <p className="mt-1 text-xs text-zinc-500">Twelve lifts covering every major muscle group.</p>
+          </div>
+          <label className="flex items-center gap-2 text-xs text-zinc-500">
+            Sort By
+            <span className="relative">
+              <select value={sort} onChange={(e) => setSort(e.target.value as SortKey)} className="appearance-none rounded-lg border border-[#2a3039] bg-[#111419] py-2 pl-3 pr-9 text-xs text-white outline-none">
+                <option value="duration">Duration</option><option value="calories">Calories</option><option value="rating">Rating</option>
+              </select>
+              <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2" />
+            </span>
+          </label>
+        </div>
+        {loading ? (
+          <div className="grid min-h-[300px] place-items-center rounded-2xl border border-dashed border-[#2a3039]">
+            <div className="text-center"><div className="mb-3 flex justify-center gap-2"><i className="loading-dot h-3 w-3 rounded-full bg-[#c8ff00]"/><i className="loading-dot h-3 w-3 rounded-full bg-[#c8ff00]"/><i className="loading-dot h-3 w-3 rounded-full bg-[#c8ff00]"/></div><p className="font-display text-xl">LOADING WORKOUTS…</p><p className="mt-1 text-xs text-zinc-500">Fetching the exercise library.</p></div>
+          </div>
+        ) : error ? (
+          <div className="rounded-2xl border border-red-900/50 bg-red-950/20 p-8 text-center"><p className="font-display text-xl">COULDN'T LOAD THE LIBRARY</p><p className="mt-2 text-sm text-zinc-500">Check your connection and refresh the page.</p></div>
+        ) : (
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">{sorted.map((workout) => <WorkoutCard key={workout.id} workout={workout} />)}</div>
+        )}
+      </section>
     </div>
   );
 }
