@@ -22,7 +22,7 @@ export default function MyPlanClient({ initialTab }: { initialTab: PlanTab }) {
   const changeTab = (next: PlanTab) => setTab(next);
 
   return (
-    <div className="mx-auto max-w-[1040px]">
+    <div className="mx-auto max-w-260">
       <div>
         <h1 className="font-display text-4xl uppercase sm:text-5xl">MY PLAN</h1>
         <p className="mt-1 text-sm text-zinc-500">Cap of five lifts for today. Finish them, then load more.</p>
@@ -41,7 +41,7 @@ export default function MyPlanClient({ initialTab }: { initialTab: PlanTab }) {
       </div>
       <div className="mt-5 space-y-3">
         {sorted.length === 0 ? (
-          <div className="grid min-h-[300px] place-items-center rounded-2xl border border-dashed border-[#292f38] text-center"><div><h2 className="font-display text-2xl">NOTHING HERE YET</h2><p className="mt-2 text-xs text-zinc-500">Browse the library and add a lift to get today moving.</p><Link href="/" className="mt-5 inline-block rounded-full bg-[#c8ff00] px-5 py-3 text-xs font-black text-black">Go to workouts</Link></div></div>
+          <div className="grid min-h-75 place-items-center rounded-2xl border border-dashed border-[#292f38] text-center"><div><h2 className="font-display text-2xl">NOTHING HERE YET</h2><p className="mt-2 text-xs text-zinc-500">Browse the library and add a lift to get today moving.</p><Link href="/" className="mt-5 inline-block rounded-full bg-[#c8ff00] px-5 py-3 text-xs font-black text-black">Go to workouts</Link></div></div>
         ) : sorted.map((workout) => <WorkoutListItem key={workout.id} workout={workout} tab={tab} />)}
       </div>
     </div>

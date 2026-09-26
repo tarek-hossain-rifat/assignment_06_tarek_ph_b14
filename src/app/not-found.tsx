@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <div className="mx-auto grid min-h-[calc(100vh-170px)] max-w-[700px] place-items-center text-center">
+    <div className="mx-auto grid min-h-[calc(100vh-170px)] max-w-175 place-items-center text-center">
       <div>
         <p className="text-xs font-black tracking-[.3em] text-[#c8ff00]">404 ERROR</p>
         <h1 className="mt-3 font-display text-6xl">PAGE NOT FOUND</h1>

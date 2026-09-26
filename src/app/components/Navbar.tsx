@@ -19,8 +19,8 @@ export default function Navbar() {
   const pathname = usePathname();
   const { plan, saved } = useFitlog();
   return (
-    <header className="fixed inset-x-0 top-0 z-50 h-[76px] border-b border-[#242830] bg-[#0c0e11]/95 backdrop-blur">
-      <div className="mx-auto flex h-full max-w-[1180px] items-center justify-between px-4 sm:px-6">
+    <header className="fixed inset-x-0 top-0 z-50 h-19 border-b border-[#242830] bg-[#0c0e11]/95 backdrop-blur">
+      <div className="mx-auto flex h-full max-w-295 items-center justify-between px-4 sm:px-6">
         <Link
           href="/"
           className="flex items-center gap-2 text-xl font-black tracking-[0.08em] text-white"

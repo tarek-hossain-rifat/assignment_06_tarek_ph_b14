@@ -12,7 +12,7 @@ export default function WorkoutDetailsClient({ workout }: { workout: Workout }) 
   const saved = isSaved(workout.id);
 
   return (
-    <div className="mx-auto max-w-[1180px]">
+    <div className="mx-auto max-w-295">
       <div className="grid gap-8 lg:grid-cols-[1fr_1.02fr] lg:items-start">
         <div className="relative aspect-square overflow-hidden rounded-2xl border border-[#272d36] bg-[#15181e]">
           <Image src={workout.image} alt={workout.name} fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" priority />

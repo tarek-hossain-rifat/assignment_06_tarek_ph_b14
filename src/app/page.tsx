@@ -29,11 +29,10 @@ export default function HomePage() {
 
   const sorted = useMemo(() => [...workouts].sort((a, b) => b[sort === "calories" ? "caloriesBurned" : sort] - a[sort === "calories" ? "caloriesBurned" : sort]), [workouts, sort]);
 
-  const heroImage = workouts[0]?.image;
 
   return (
-    <div className="mx-auto max-w-[1180px]">
-      <section className="grid min-h-[420px] overflow-hidden rounded-2xl border border-[#292e37] bg-[#15181e] lg:grid-cols-[1.2fr_.8fr]">
+    <div className="mx-auto max-w-295">
+      <section className="grid min-h-105 overflow-hidden rounded-2xl border border-[#292e37] bg-[#15181e] lg:grid-cols-[1.2fr_.8fr]">
         <div className="flex flex-col justify-center px-7 py-10 sm:px-12 lg:px-14">
           <p className="mb-5 text-xs font-black tracking-widest text-[#c8ff00]">
             WORKOUT LIBRARY
@@ -91,7 +90,7 @@ export default function HomePage() {
           </label>
         </div>
         {loading ? (
-          <div className="grid min-h-[300px] place-items-center rounded-2xl border border-dashed border-[#2a3039]">
+          <div className="grid min-h-75 place-items-center rounded-2xl border border-dashed border-[#2a3039]">
             <div className="text-center">
               <div className="mb-3 flex justify-center gap-2">
                 <i className="loading-dot h-3 w-3 rounded-full bg-[#c8ff00]" />
