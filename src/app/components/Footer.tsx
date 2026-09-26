@@ -1,4 +1,3 @@
-import { LogoMark } from "@/app/components/icons";
 import Image from "next/image";
 
 export default function Footer() {
