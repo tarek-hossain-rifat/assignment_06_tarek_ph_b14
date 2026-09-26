@@ -13,7 +13,7 @@ export default function WorkoutListItem({ workout, tab }: { workout: Workout; ta
     <div className={`flex flex-col gap-4 rounded-2xl border border-[#252a33] bg-[#15181e] p-3 sm:flex-row sm:items-center sm:p-4 ${isDone ? "opacity-70" : ""}`}>
       <Image src={workout.image} alt={workout.name} width={128} height={80} className="h-20 w-full rounded-xl object-cover sm:w-32" />
       <div className="min-w-0 flex-1">
-        <h3 className="font-display text-base font-black uppercase text-white">{workout.name}</h3>
+        <h3 className="text-base font-black uppercase text-white">{workout.name}</h3>
         <p className="mt-1 text-xs text-zinc-500">{workout.equipment}</p>
         <div className="mt-2 flex flex-wrap items-center gap-3 text-[10px] text-zinc-400">
           <span className="flex items-center gap-1"><Clock3 className="h-3 w-3 text-[#c8ff00]" />{workout.duration} min</span>

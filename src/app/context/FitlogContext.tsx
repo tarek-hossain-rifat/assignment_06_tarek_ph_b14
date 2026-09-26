@@ -16,10 +16,8 @@ type FitlogContextValue = {
 
   addToPlan: (workout: Workout) => void;
   saveWorkout: (workout: Workout) => void;
-
   removeFromPlan: (id: number) => void;
   removeFromSaved: (id: number) => void;
-
   markDone: (id: number) => void;
 
   isInPlan: (id: number) => boolean;
@@ -36,80 +34,70 @@ const SAVED_KEY = "fitlog-saved";
 const DONE_KEY = "fitlog-done";
 
 export function FitlogProvider({ children }: { children: React.ReactNode }) {
+  // Start with empty values on BOTH server and client
+  const [plan, setPlan] = useState<Workout[]>([]);
+  const [saved, setSaved] = useState<Workout[]>([]);
+  const [done, setDone] = useState<number[]>([]);
 
-  const [plan, setPlan] = useState<Workout[]>(() => {
-    if (typeof window === "undefined") {
-      return [];
-    }
-
-    try {
-      const storedPlan = localStorage.getItem(PLAN_KEY);
-
-      if (!storedPlan) {
-        return [];
-      }
-
-      const parsedPlan: unknown = JSON.parse(storedPlan);
-
-      return Array.isArray(parsedPlan) ? (parsedPlan as Workout[]) : [];
-    } catch {
-      return [];
-    }
-  });
-
-  const [saved, setSaved] = useState<Workout[]>(() => {
-    if (typeof window === "undefined") {
-      return [];
-    }
-
-    try {
-      const storedSaved = localStorage.getItem(SAVED_KEY);
-
-      if (!storedSaved) {
-        return [];
-      }
-
-      const parsedSaved: unknown = JSON.parse(storedSaved);
-
-      return Array.isArray(parsedSaved) ? (parsedSaved as Workout[]) : [];
-    } catch {
-      return [];
-    }
-  });
-
-  const [done, setDone] = useState<number[]>(() => {
-    if (typeof window === "undefined") {
-      return [];
-    }
-
-    try {
-      const storedDone = localStorage.getItem(DONE_KEY);
-
-      if (!storedDone) {
-        return [];
-      }
-
-      const parsedDone: unknown = JSON.parse(storedDone);
-
-      return Array.isArray(parsedDone) ? (parsedDone as number[]) : [];
-    } catch {
-      return [];
-    }
-  });
+  const [hydrated, setHydrated] = useState(false);
 
   const [toasts, setToasts] = useState<Toast[]>([]);
 
+  // Load saved data AFTER hydration
   useEffect(() => {
+    try {
+      const storedPlan = localStorage.getItem(PLAN_KEY);
+      const storedSaved = localStorage.getItem(SAVED_KEY);
+      const storedDone = localStorage.getItem(DONE_KEY);
+
+      if (storedPlan) {
+        const parsedPlan: unknown = JSON.parse(storedPlan);
+
+        if (Array.isArray(parsedPlan)) {
+          setPlan(parsedPlan as Workout[]);
+        }
+      }
+
+      if (storedSaved) {
+        const parsedSaved: unknown = JSON.parse(storedSaved);
+
+        if (Array.isArray(parsedSaved)) {
+          setSaved(parsedSaved as Workout[]);
+        }
+      }
+
+      if (storedDone) {
+        const parsedDone: unknown = JSON.parse(storedDone);
+
+        if (Array.isArray(parsedDone)) {
+          setDone(parsedDone as number[]);
+        }
+      }
+    } catch {
+      console.log("Could not load FitLog data from localStorage");
+    } finally {
+      setHydrated(true);
+    }
+  }, []);
+
+  // Save only AFTER localStorage has been loaded
+  useEffect(() => {
+    if (!hydrated) return;
+
     localStorage.setItem(PLAN_KEY, JSON.stringify(plan));
-  }, [plan]);
+  }, [plan, hydrated]);
 
   useEffect(() => {
+    if (!hydrated) return;
+
     localStorage.setItem(SAVED_KEY, JSON.stringify(saved));
-  }, [saved]);
+  }, [saved, hydrated]);
 
   useEffect(() => {
+    if (!hydrated) return;
+
     localStorage.setItem(DONE_KEY, JSON.stringify(done));
-  }, [done]);
+  }, [done, hydrated]);
 
   const showToast = (message: string) => {
     const id = Date.now() + Math.random();
@@ -182,10 +170,8 @@ export function FitlogProvider({ children }: { children: React.ReactNode }) {
 
       addToPlan,
       saveWorkout,
-
       removeFromPlan,
       removeFromSaved,
-
       markDone,
 
       isInPlan: (id: number) => plan.some((item) => item.id === id),

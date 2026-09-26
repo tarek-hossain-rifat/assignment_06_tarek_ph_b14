@@ -12,10 +12,27 @@ export default function MyPlanClient({ initialTab }: { initialTab: PlanTab }) {
   const [sort, setSort] = useState<SortKey>("duration");
   const { plan, saved } = useFitlog();
   const current = tab === "plan" ? plan : saved;
-  const sorted = useMemo(() => [...current].sort((a, b) => {
-    const key = sort === "calories" ? "caloriesBurned" : sort;
-    return b[key] - a[key];
-  }), [current, sort]);
+  const sorted = useMemo(() => {
+    const items = [...current];
+
+    items.sort((a, b) => {
+      if (sort === "duration") {
+        return b.duration - a.duration;
+      }
+
+      if (sort === "calories") {
+        return b.caloriesBurned - a.caloriesBurned;
+      }
+
+      if (sort === "rating") {
+        return b.rating - a.rating;
+      }
+
+      return 0;
+    });
+
+    return items;
+  }, [current, sort]);
   const totalMinutes = plan.reduce((sum, item) => sum + item.duration, 0);
   const totalCalories = plan.reduce((sum, item) => sum + item.caloriesBurned, 0);
 
