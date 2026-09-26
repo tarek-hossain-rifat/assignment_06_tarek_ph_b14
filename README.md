@@ -1,47 +1,101 @@
-# FitLog — Workout Library
+# FitLog — Workout Library & Daily Planner
 
-A dark, responsive workout library and daily planning app built with Next.js App Router and Tailwind CSS.
+FitLog is a modern, responsive workout management web application built with **Next.js** and **Tailwind CSS**.
 
-## Technologies
+The application allows users to browse a workout library, view workout details, add workouts to their daily plan, save workouts for later, and track completed workouts.
+
+---
+
+## 🚀 Live Features
+
+- 🏋️ Browse workout library
+- 🔍 View detailed workout information
+- ➕ Add workouts to today's plan
+- 💾 Save workouts for later
+- ✅ Mark workouts as completed
+- 🗑️ Remove workouts from the plan
+- 📊 View workout statistics
+- 🔢 Maximum 5 workouts in today's plan
+- 🔔 Toast notifications
+- 💽 Data persistence using Local Storage
+- 📱 Fully responsive design
+- 🌙 Dark gym-focused UI
+- 🔃 Sort workouts by:
+  - Duration
+  - Calories
+  - Rating
+- ⚡ Loading state while fetching workouts
+- ❌ Error state when API request fails
+- 📄 Custom 404 page
+
+---
+
+## 🛠️ Technologies Used
+
+### Frontend
+
+- Next.js
+- React
+- TypeScript
+- Tailwind CSS
+- Lucide React
+- Next.js Image
 - Next.js App Router
-- React + TypeScript
-- Tailwind CSS v4
-- Lucide React icons
-- FitLog REST API
-- localStorage for plan/saved persistence
 
-## Key Features
-1. Responsive workout library with loading animation.
-2. Workout detail pages with equipment, difficulty, sets, reps and instructions.
-3. Today's Plan with a five-workout cap, live minutes/calories metrics and Mark as Done.
-4. Saved workouts with a dedicated tab.
-5. Toast notifications for plan/save/remove/done actions.
-6. Duration, calories and rating sorting.
-7. Persistent navbar counters and fixed footer.
-8. 404 page and deployment-safe App Router routes.
+### Data & Storage
 
-## Run locally
+- REST API
+- Browser Local Storage
 
-```bash
-npm install
-npm run dev
-```
+### Development Tools
 
-Open `http://localhost:3000`.
+- VS Code
+- Git
+- GitHub
+- npm
 
-## Environment
+---
 
-Copy `.env.example` to `.env.local` and set:
+## 📂 Project Structure
 
-```env
-NEXT_PUBLIC_FITLOG_API_URL=https://api.abcz.workers.dev/api/fitlog
-```
-
-The provided API is public, so this variable is configuration rather than a secret. Never put private API keys in a `NEXT_PUBLIC_*` variable.
-
-## Build
-
-```bash
-npm run build
-npm start
-```
+```text
+fitlog/
+│
+├── app/
+│   ├── components/
+│   │   ├── Navbar.tsx
+│   │   ├── Footer.tsx
+│   │   ├── WorkoutCard.tsx
+│   │   ├── Toast.tsx
+│   │   └── ...
+│   │
+│   ├── context/
+│   │   └── FitlogContext.tsx
+│   │
+│   ├── lib/
+│   │   └── api.ts
+│   │
+│   ├── my-plan/
+│   │   └── page.tsx
+│   │
+│   ├── workout/
+│   │   └── [id]/
+│   │       └── page.tsx
+│   │
+│   ├── types/
+│   │   └── workout.ts
+│   │
+│   ├── globals.css
+│   ├── layout.tsx
+│   ├── page.tsx
+│   └── not-found.tsx
+│
+├── public/
+│   ├── banner.png
+│   └── ...
+│
+├── .env.local
+├── package.json
+├── tsconfig.json
+├── next.config.ts
+└── README.md

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronDown, Dumbbell, Flame, Timer } from "lucide-react";
+import { ChevronDown} from "lucide-react";
 import { useMemo, useState } from "react";
 import WorkoutListItem from "@/app/components/WorkoutListItem";
 import { useFitlog } from "@/app/context/FitlogContext";
