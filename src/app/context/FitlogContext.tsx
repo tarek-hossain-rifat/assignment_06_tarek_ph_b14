@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 import type { Workout } from "@/app/types/workout";
 
@@ -33,17 +39,22 @@ const PLAN_KEY = "fitlog-plan";
 const SAVED_KEY = "fitlog-saved";
 const DONE_KEY = "fitlog-done";
 
-export function FitlogProvider({ children }: { children: React.ReactNode }) {
-  // Start with empty values on BOTH server and client
+export function FitlogProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  // Keep the initial state identical on server and client
   const [plan, setPlan] = useState<Workout[]>([]);
   const [saved, setSaved] = useState<Workout[]>([]);
   const [done, setDone] = useState<number[]>([]);
 
   const [hydrated, setHydrated] = useState(false);
 
+  // Custom toast state
   const [toasts, setToasts] = useState<Toast[]>([]);
 
-  // Load saved data AFTER hydration
+  // Load localStorage data after hydration
   useEffect(() => {
     try {
       const storedPlan = localStorage.getItem(PLAN_KEY);
@@ -80,25 +91,28 @@ export function FitlogProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  // Save only AFTER localStorage has been loaded
+  // Save plan
   useEffect(() => {
     if (!hydrated) return;
 
     localStorage.setItem(PLAN_KEY, JSON.stringify(plan));
   }, [plan, hydrated]);
 
+  // Save saved workouts
   useEffect(() => {
     if (!hydrated) return;
 
     localStorage.setItem(SAVED_KEY, JSON.stringify(saved));
   }, [saved, hydrated]);
 
+  // Save completed workouts
   useEffect(() => {
     if (!hydrated) return;
 
     localStorage.setItem(DONE_KEY, JSON.stringify(done));
   }, [done, hydrated]);
 
+  // Show toast
   const showToast = (message: string) => {
     const id = Date.now() + Math.random();
 
@@ -111,13 +125,16 @@ export function FitlogProvider({ children }: { children: React.ReactNode }) {
     ]);
 
     window.setTimeout(() => {
-      setToasts((current) => current.filter((toast) => toast.id !== id));
+      setToasts((current) =>
+        current.filter((toast) => toast.id !== id),
+      );
     }, 2400);
   };
 
+  // Add workout to today's plan
   const addToPlan = (workout: Workout) => {
     if (plan.some((item) => item.id === workout.id)) {
-      showToast("Already in today's plan");
+      showToast("Already added to today's plan");
       return;
     }
 
@@ -131,9 +148,10 @@ export function FitlogProvider({ children }: { children: React.ReactNode }) {
     showToast("Added to today's plan");
   };
 
+  // Save workout
   const saveWorkout = (workout: Workout) => {
     if (saved.some((item) => item.id === workout.id)) {
-      showToast("Already saved");
+      showToast("Already saved for later");
       return;
     }
 
@@ -142,22 +160,33 @@ export function FitlogProvider({ children }: { children: React.ReactNode }) {
     showToast("Saved for later");
   };
 
+  // Remove workout from today's plan
   const removeFromPlan = (id: number) => {
-    setPlan((current) => current.filter((item) => item.id !== id));
+    setPlan((current) =>
+      current.filter((item) => item.id !== id),
+    );
 
-    setDone((current) => current.filter((item) => item !== id));
+    setDone((current) =>
+      current.filter((item) => item !== id),
+    );
 
     showToast("Removed from today's plan");
   };
 
+  // Remove workout from saved
   const removeFromSaved = (id: number) => {
-    setSaved((current) => current.filter((item) => item.id !== id));
+    setSaved((current) =>
+      current.filter((item) => item.id !== id),
+    );
 
     showToast("Removed from saved");
   };
 
+  // Mark workout as done
   const markDone = (id: number) => {
-    setDone((current) => (current.includes(id) ? current : [...current, id]));
+    setDone((current) =>
+      current.includes(id) ? current : [...current, id],
+    );
 
     showToast("Workout marked as done");
   };
@@ -174,9 +203,11 @@ export function FitlogProvider({ children }: { children: React.ReactNode }) {
       removeFromSaved,
       markDone,
 
-      isInPlan: (id: number) => plan.some((item) => item.id === id),
+      isInPlan: (id: number) =>
+        plan.some((item) => item.id === id),
 
-      isSaved: (id: number) => saved.some((item) => item.id === id),
+      isSaved: (id: number) =>
+        saved.some((item) => item.id === id),
 
       showToast,
       toasts,
@@ -185,7 +216,9 @@ export function FitlogProvider({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <FitlogContext.Provider value={value}>{children}</FitlogContext.Provider>
+    <FitlogContext.Provider value={value}>
+      {children}
+    </FitlogContext.Provider>
   );
 }
 
@@ -193,7 +226,9 @@ export function useFitlog() {
   const context = useContext(FitlogContext);
 
   if (!context) {
-    throw new Error("useFitlog must be used inside FitlogProvider");
+    throw new Error(
+      "useFitlog must be used inside FitlogProvider",
+    );
   }
 
   return context;
