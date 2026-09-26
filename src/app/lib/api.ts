@@ -2,7 +2,7 @@ import type { Workout } from "@/app/types/workout";
 
 export const API_URL =
   process.env.NEXT_PUBLIC_FITLOG_API_URL ||
-  "https://api.abcz.workers.dev/api/fitlog";
+  "https://api.api-store.workers.dev/api/fitlog";
 
 export async function getWorkouts(): Promise<Workout[]> {
   const response = await fetch(API_URL, { cache: "no-store" });
